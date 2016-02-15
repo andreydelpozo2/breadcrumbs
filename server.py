@@ -62,6 +62,7 @@ def add_page():
 @app.route("/addmore", methods=['POST'])
 @crossdomain(origin='*')
 def add_more_page():
+    print(request)
     xx = request.form['param2']
     print(xx)
     #a = request

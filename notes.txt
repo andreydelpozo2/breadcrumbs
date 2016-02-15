@@ -1,0 +1,6 @@
+should I use 0mq or redis? In [1]: import requests
+https://realpython.com/blog/python/flask-by-example-implementing-a-redis-task-queue/
+http://python-rq.org/
+
+need this:
+https://github.com/mitsuhiko/werkzeug/pull/838

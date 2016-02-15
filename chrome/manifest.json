@@ -1,16 +1,21 @@
 {
   "manifest_version": 2,
 
-  "name": "Getting started example",
-  "description": "This extension shows a Google Image search result for the current page",
+  "name": "Breadcrumbs",
+  "description": "This extension store the url in the server to be remebered forever",
   "version": "1.0",
 
   "browser_action": {
     "default_icon": "icon.png",
-    "default_popup": "popup.html"
+    "default_title": "remember this"
   },
+
   "permissions": [
-    "activeTab",
-    "https://ajax.googleapis.com/"
-  ]
+    "tabs", "http://*/*", "https://*/*"
+  ],
+
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  }
 }
