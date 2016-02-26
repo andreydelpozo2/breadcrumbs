@@ -1,0 +1,7 @@
+elasticsearch==2.2.0
+Flask==0.10.1
+beautifulsoup4==4.4.1
+requests==2.9.1
+rq==0.5.6
+rq-dashboard==0.3.6
+redis==2.10.5

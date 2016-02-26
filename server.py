@@ -7,6 +7,13 @@ app = Flask(__name__)
 from datetime import timedelta
 from flask import make_response, request, current_app
 from functools import update_wrapper
+from rq import Queue
+from redis import Redis
+from indexworker import indexpage
+import time
+from flask import render_template
+#from . import config
+from config import admin_url
 
 
 def crossdomain(origin=None, methods=None, headers=None,
@@ -55,19 +62,39 @@ def crossdomain(origin=None, methods=None, headers=None,
 def index():
     return "Index Page"
 
+@app.route("/config")
+def config():
+    return render_template('config.html',senseurl=admin_url["sense"], rqdashboard=admin_url["rqdash"])
+
+
 @app.route("/add", methods=['GET'])
 def add_page():
     return "added"
+
+@app.route("/rem", methods=['GET'])
+def rem_page():
+    return "added"
+
 
 @app.route("/addmore", methods=['POST'])
 @crossdomain(origin='*')
 def add_more_page():
     print(request)
-    xx = request.form['param2']
-    print(xx)
+    theURL = request.form['param2']
+    print(theURL)
+
+    redis_conn = Redis()
+    q = Queue(connection=redis_conn)  # no args implies the default queue
+
+    # Delay execution of count_words_at_url('http://nvie.com')
+    job = q.enqueue(indexpage, theURL)
+    # Now, wait a while, until the worker is finished
+    time.sleep(10)
+    print(job.result)   # => 889
+
     #a = request
     #b = a.args
-    return "added more2:"+xx
+    return "added more2:"+theURL
 
 
 @app.route("/hello")
