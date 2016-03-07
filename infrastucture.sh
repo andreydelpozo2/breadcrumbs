@@ -28,8 +28,10 @@ function stopInfrastructure()
 
 
 function startWorkers(){
-    nohup rq worker > worker.log 2> worker.err &
-    echo $! > worker.pid
+    cd src
+    nohup rq worker > ../worker.log 2> ../worker.err &
+    echo $! > ../worker.pid
+    cd ..
 }
 
 function stopWorkers(){

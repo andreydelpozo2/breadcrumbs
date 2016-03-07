@@ -13,7 +13,6 @@ def simplework(url):
 
 def indexpage(url):
     print("HOLA!!!!!!!!!!!!")
-    aa = 1/0
     resp = requests.get(url)
     soup = BeautifulSoup(resp.text, 'html.parser')
     soup.get_text()
@@ -25,5 +24,5 @@ def indexpage(url):
 def dobookmarks(filename):
     soup = BeautifulSoup(file(filename).read(), 'html.parser')
     for anchor in soup.findAll('a', href=True):
-        print(anchor['href'])
+        indexpage(anchor['href'])
     return True
