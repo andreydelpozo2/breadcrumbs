@@ -11,7 +11,7 @@ def count_words_at_url(url):
 def simplework(url):
     return url
 
-def indexpage(url):
+def indexpage_off(url):
     resp = requests.get(url)
     soup = BeautifulSoup(resp.text, 'html.parser')
     soup.get_text()

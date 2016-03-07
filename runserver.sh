@@ -1,2 +1,3 @@
-nohup rq worker > worker.log 2> worker.err &
+#!/usr/bin/env bash
+
 python src/server.py

@@ -4,18 +4,21 @@ app = Flask(__name__)
 
 
 from datetime import timedelta
-from flask import make_response, request, current_app
+from flask import make_response, request, current_app, redirect
 from functools import update_wrapper
 from rq import Queue
 from redis import Redis
 import redis
 from indexworker import indexpage
+from indexworker import dobookmarks
 import time
 from flask import render_template
 from config import admin_url
 
 import requests
 import json
+import os
+from werkzeug.utils import secure_filename
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
@@ -65,8 +68,35 @@ def index():
 
 @app.route("/config")
 def config():
-    request
     return render_template('config.html', senseurl=admin_url["sense"], rqdashboard=admin_url["rqdash"])
+
+@app.route("/bulk", methods=['GET', 'POST'])
+@crossdomain(origin='*')
+def bulk():
+    if request.method == 'POST':
+        print("in the post")
+        print(request.files)
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+#        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        savedfile = os.path.join('/tmp/', filename)
+        file.save(savedfile)
+        print(file)
+        #return redirect(url_for('uploaded_file', filename=filename))
+
+
+        redis_conn = Redis()
+        q = Queue(connection=redis_conn)  # no args implies the default queue
+
+        # Delay execution of count_words_at_url('http://nvie.com')
+        job = q.enqueue(dobookmarks, savedfile)
+        # Now, wait a while, until the worker is finished
+        print(job.result)   # => 889
+
+
+        return render_template('bulk.html')
+    else:
+        return render_template('bulk.html')
 
 
 @app.route("/status")
@@ -106,10 +136,9 @@ def add_more_page():
     redis_conn = Redis()
     q = Queue(connection=redis_conn)  # no args implies the default queue
 
-    # Delay execution of count_words_at_url('http://nvie.com')
     job = q.enqueue(indexpage, theURL)
     # Now, wait a while, until the worker is finished
-    time.sleep(10)
+    time.sleep(3)
     print(job.result)   # => 889
 
     #a = request

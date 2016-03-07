@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 function startInfrastructure()
 {
@@ -26,6 +26,16 @@ function stopInfrastructure()
     done
 }
 
+
+function startWorkers(){
+    nohup rq worker > worker.log 2> worker.err &
+    echo $! > worker.pid
+}
+
+function stopWorkers(){
+    var=$(<worker.pid)
+    kill -2 ${var}
+}
 
 
 #http://localhost:5601/app/sense

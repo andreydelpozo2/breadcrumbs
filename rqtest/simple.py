@@ -2,9 +2,9 @@
 
 from rq import Queue
 from redis import Redis
-from worker import count_words_at_url
-from worker import simplework
-from worker import indexpage
+from notworker import count_words_at_url
+from notworker import simplework
+from notworker import indexpage
 import time
 
 # Tell RQ what Redis connection to use
