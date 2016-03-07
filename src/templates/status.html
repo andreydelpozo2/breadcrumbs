@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container">
+      <br/>ElasticSearch: {{ search_status}} <a href="{{ senseurl }}" target="_blank">More info</a>
+      <br/>Redis: {{ redis_status}} <a href="{{ rqdashboard }}" target="_blank">More info</a>
+  </div>
+{% endblock %}

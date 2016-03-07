@@ -1,5 +1,4 @@
 from flask import Flask, url_for
-from flask import request
 
 app = Flask(__name__)
 
@@ -9,12 +8,14 @@ from flask import make_response, request, current_app
 from functools import update_wrapper
 from rq import Queue
 from redis import Redis
+import redis
 from indexworker import indexpage
 import time
 from flask import render_template
-#from . import config
 from config import admin_url
 
+import requests
+import json
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
@@ -60,12 +61,31 @@ def crossdomain(origin=None, methods=None, headers=None,
 
 @app.route("/")
 def index():
-    return render_template('index.html',senseurl=admin_url["sense"], rqdashboard=admin_url["rqdash"])
+    return render_template('index.html', senseurl=admin_url["sense"], rqdashboard=admin_url["rqdash"])
 
 @app.route("/config")
 def config():
-    return render_template('config.html',senseurl=admin_url["sense"], rqdashboard=admin_url["rqdash"])
+    request
+    return render_template('config.html', senseurl=admin_url["sense"], rqdashboard=admin_url["rqdash"])
 
+
+@app.route("/status")
+def status():
+    try:
+        d = json.loads(requests.get('http://localhost:9200/_cluster/health//?pretty').text)
+        elasticStatus = d['status'];
+    except:
+        elasticStatus = "Not Found";
+
+    try:
+        rs = Redis()
+        rs.get(None)  # getting None returns None or throws an exception
+        redisStatus = "Green"
+    except (redis.exceptions.ConnectionError,
+            redis.exceptions.BusyLoadingError):
+        redisStatus = "Red"
+
+    return render_template('status.html', senseurl=admin_url["sense"], rqdashboard=admin_url["rqdash"], search_status=elasticStatus, redis_status=redisStatus)
 
 @app.route("/add", methods=['GET'])
 def add_page():
