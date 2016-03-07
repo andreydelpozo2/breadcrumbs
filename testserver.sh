@@ -1,1 +1,1 @@
-python dummyposts.py
+python src/dummyposts.py
