@@ -60,7 +60,7 @@ def crossdomain(origin=None, methods=None, headers=None,
 
 @app.route("/")
 def index():
-    return "Index Page"
+    return render_template('index.html',senseurl=admin_url["sense"], rqdashboard=admin_url["rqdash"])
 
 @app.route("/config")
 def config():
