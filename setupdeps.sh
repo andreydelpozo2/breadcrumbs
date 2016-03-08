@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 pip install -r requirements.txt
 #pip freeze | grep requests | awk -F'==' '{ print $2 }'
 
