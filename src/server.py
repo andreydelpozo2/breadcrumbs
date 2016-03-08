@@ -19,6 +19,7 @@ import requests
 import json
 import os
 from werkzeug.utils import secure_filename
+from elasticsearch import Elasticsearch
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
@@ -64,7 +65,20 @@ def crossdomain(origin=None, methods=None, headers=None,
 
 @app.route("/")
 def index():
-    return render_template('index.html', senseurl=admin_url["sense"], rqdashboard=admin_url["rqdash"])
+
+    resultURLs = []
+    try:
+        if request.args['q'] is not None:
+            elasticClient = Elasticsearch()
+            srall = elasticClient.search(index='bc',body={"query": {"match": {"text":request.args['q']}},"highlight": {"fields" : {"text" : {}}}})
+            totalHits = srall['hits']['total']
+            print(totalHits)
+            resultURLs = [{'url':sr['_source']['url'] ,'short':"<br>".join(sr['highlight']['text'])} for sr in srall['hits']['hits']]
+            print(resultURLs)
+    except KeyError:
+        pass
+    return render_template('index.html', senseurl=admin_url["sense"], rqdashboard=admin_url["rqdash"],
+                           users=resultURLs)
 
 @app.route("/config")
 def config():

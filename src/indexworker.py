@@ -12,7 +12,6 @@ def simplework(url):
     return url
 
 def indexpage(url):
-    print("HOLA!!!!!!!!!!!!")
     resp = requests.get(url)
     soup = BeautifulSoup(resp.text, 'html.parser')
     soup.get_text()
