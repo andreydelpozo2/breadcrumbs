@@ -1,0 +1,33 @@
+diff --git a/nginx.conf b/nginx.conf
+index f9ebe57..230b584 100644
+--- a/nginx.conf
++++ b/nginx.conf
+@@ -2,9 +2,9 @@
+ #user  nobody;
+ worker_processes  1;
+ 
+-#error_log  logs/error.log;
+-#error_log  logs/error.log  notice;
+-#error_log  logs/error.log  info;
++error_log  logs/error.log;
++error_log  logs/error.log  notice;
++error_log  logs/error.log  info;
+ 
+ #pid        logs/nginx.pid;
+ 
+@@ -45,6 +45,15 @@ http {
+             index  index.html index.htm;
+         }
+ 
++        location = /breadcrumbs { rewrite ^ /breadcrumbs/; }
++        location /breadcrumbs { try_files $uri @breadcrumbs; }
++        location @breadcrumbs {
++          include uwsgi_params;
++          uwsgi_param SCRIPT_NAME /breadcrumbs;
++          uwsgi_modifier1 30;
++          uwsgi_pass unix:/tmp/uwsgi.sock;
++        }
++
+         #error_page  404              /404.html;
+ 
+         # redirect server error pages to the static page /50x.html

@@ -1,0 +1,4 @@
+/usr/local/etc/nginx/nginx.conf
+sudo nginx -s reload
+sudo nginx -t
+uwsgi -s /tmp/uwsgi.sock -w server:app --chmod-socket=666

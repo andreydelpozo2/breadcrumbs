@@ -1,7 +1,5 @@
 from flask import Flask, url_for
 
-app = Flask(__name__)
-
 
 from datetime import timedelta
 from flask import make_response, request, current_app, redirect
@@ -20,6 +18,11 @@ import json
 import os
 from werkzeug.utils import secure_filename
 from elasticsearch import Elasticsearch
+
+app = Flask(__name__)
+
+
+app.config["APPLICATION_ROOT"] = "/breadcrumbs"
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
