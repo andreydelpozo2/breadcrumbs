@@ -5,7 +5,13 @@ function startInfrastructure()
     mydir=${PWD}
     echo ${mydir}
     cd ${HOME}/local
-    nohup ./kibana-4.4.1-darwin-x64/bin/kibana -H localhost > kibana.log 2> kibana.err &
+
+    if [ $(uname) == "Darwin" ]; then
+        nohup ./kibana-4.4.1-darwin-x64/bin/kibana -H localhost > kibana.log 2> kibana.err &
+    else
+        nohup ./kibana-4.4.2-linux-x64/bin/kibana -H localhost > kibana.log 2> kibana.err &
+    fi
+
     echo $! > ${mydir}/kibara.pid
     nohup ./elasticsearch-2.2.0/bin/elasticsearch > es.log 2> es.err &
     echo $! > ${mydir}/elasticsearch.pid
