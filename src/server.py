@@ -183,6 +183,18 @@ def projects():
 def about():
     return "About page"
 
+@app.route("/bookmarks")
+def bookmarks():
+    #es = Elasticsearch()
+    #es.search(index='bc', filter_path=['hits.hits._id','hits.hits._source.url', 'hits.hits._source.timestamp'])
+    rq = requests.get("http://localhost:9200/bc/_search?_source=timestamp,url")
+    a = json.loads(rq.text)
+    s = [x['_source']['url'] for x in a['hits']['hits']]
+
+    return render_template('bookmarks.html', links=s);
+
+
+#GET
 if __name__ == "__main__":
     app.debug = True
     app.run()

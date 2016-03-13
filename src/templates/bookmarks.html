@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>All bookmarks</h1>
+<div class="container">
+    <ul>
+  {% for u in links %}
+    <li><a href="{{ u }}">{{ u }}</a></li>
+  {% endfor %}
+  </ul>
+      </div>
+{% endblock %}
