@@ -10,6 +10,15 @@ function customMailtoUrl() {
   return window.localStorage.customMailtoUrl;
 }
 
+function defaultBreadCrumbsEndpoint() {
+    var defaultURL = "http://adelpozo.xyz/breadcrumbs";
+
+    if (window.localStorage != null && window.localStorage.breadCrumbsServerURL != null)
+        return window.localStorage.breadCrumbsServerURL;
+
+    return defaultURL;
+}
+
 function sendToServerold(tab_id, subject, body, selection) {
   var url = "http://127.0.0.1:5000/";
   var representationOfDesiredState = "The cheese is old and moldy, where is the bathroom?";
@@ -27,7 +36,7 @@ function sendToServerold(tab_id, subject, body, selection) {
 
 function sendToServer(tab_id, subject, body, selection) {
   alert("sendToServer")
-  var url = "http://127.0.0.1:5000/addmore";
+  var url = defaultBreadCrumbsEndpoint()+"/addmore";
   
   var client = new XMLHttpRequest();
   client.open("POST", url, false);
