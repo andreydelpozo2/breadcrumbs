@@ -16,7 +16,10 @@ else
     ./kibana-4.4.2-linux-x64/bin/kibana plugin --install elastic/sense
 fi
 
+cp ./deploy/elasticsearch.yml ${HONE}/local/elasticsearch-2.2.0/config/elasticsearch.yml
+
 cd ${HOME}/local
+
 wget http://download.redis.io/releases/redis-3.0.7.tar.gz
 tar xzf redis-3.0.7.tar.gz
 cd redis-3.0.7

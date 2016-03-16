@@ -2,9 +2,7 @@
 
 function startInfrastructure()
 {
-    mydir=${PWD}
-    echo ${mydir}
-    cd ${HOME}/local
+    pushd ${HOME}/local
 
     if [ $(uname) == "Darwin" ]; then
         nohup ./kibana-4.4.1-darwin-x64/bin/kibana -H localhost > kibana.log 2> kibana.err &
@@ -12,21 +10,21 @@ function startInfrastructure()
         nohup ./kibana-4.4.2-linux-x64/bin/kibana -H localhost > kibana.log 2> kibana.err &
     fi
 
-    echo $! > ${mydir}/kibara.pid
+    echo $! > /tmp/kibara.pid
     nohup ./elasticsearch-2.2.0/bin/elasticsearch > es.log 2> es.err &
-    echo $! > ${mydir}/elasticsearch.pid
+    echo $! > /tmp/elasticsearch.pid
     nohup ./redis-3.0.7/src/redis-server > redis.log 2> redis.err &
-    echo $! > ${mydir}/redis.pid
+    echo $! > /tmp/redis.pid
 
     #monitor
     nohup rq-dashboard > rqdashboard.log 2> rqdashboard.log &
-    echo $! > ${mydir}/rq-dashboard.pid
-    cd ${mydir}
+    echo $! > /tmp/rq-dashboard.pid
+    popd
 }
 
 function stopInfrastructure()
 {
-    for i in {./kibara.pid,./elasticsearch.pid,./redis.pid,./rq-dashboard.pid}; do
+    for i in {/tmp/kibara.pid,/tmp/elasticsearch.pid,/tmp/redis.pid,/tmp/rq-dashboard.pid}; do
         var=$(<${i})
         kill -6 ${var}
     done
